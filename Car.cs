@@ -20,7 +20,7 @@ public class Car
 
 	public override string ToString()
 	{
-		return Company + " " + Model + " , " + Year;
+		return Company + " " + Model + ", " + Year;
 	}
 
     protected Car(SerializationInfo info, StreamingContext context)

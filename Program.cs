@@ -9,33 +9,32 @@ public class Program
 {
     public void XmlSerializationDemo()
     {
-        IList<Human> humans = new List<Human>() {
-            new Human("Avraham", 'E', "Weinberg", 2000),
-             new Human("Yonatan", 'S', "Katz", 2000),
-              new Human("Mark", 'Y', "Kimmel", 2000),
-               new Human("Dov", 'B', "Kimmel", 2000),
+        IList<Car> cars = new List<Car>() {
+            new Car("Honda", "CRV", 2012),
+             new Car("Toyota", "Sienna", 2004),
+              new Car("Ford", "F-150", 1993),
         };
 
 
-        var dataContractSerializer = new DataContractSerializer(typeof(List<Human>));
+        var then = DateTime.Now;
+        var dataContractSerializer = new DataContractSerializer(typeof(List<Car>));
         using (var stream = new FileStream("humans-serialized.dat", FileMode.Create))
         {
-            var then = DateTime.Now;
-            dataContractSerializer.WriteObject(stream, humans);
-            Console.WriteLine("Object Serialized in " + (DateTime.Now.Millisecond - then.Millisecond) + "ms.");
+            dataContractSerializer.WriteObject(stream, cars);
+            Console.WriteLine("XML Method: Object Serialized in " + (DateTime.Now.Millisecond - then.Millisecond) + "ms.");
         }
 
-        humans = null;
+        cars = null;
 
+        then = DateTime.Now;
         using (var stream = new FileStream("humans-serialized.dat", FileMode.Open))
         {
-            var then = DateTime.Now;
-            humans = (List<Human>) dataContractSerializer.ReadObject(stream);
-            Console.WriteLine("Object Deserialized in " + (DateTime.Now.Millisecond - then.Millisecond) + "ms.\n");
+            cars = (List<Car>) dataContractSerializer.ReadObject(stream);
+            Console.WriteLine("Object Deserialized in " + (DateTime.Now.Millisecond - then.Millisecond) + "ms.");
         }
 
-        foreach (var human in humans)
-            Console.WriteLine(human.ToString());
+        foreach (var car in cars)
+            Console.WriteLine(car.ToString()); Console.WriteLine();
     }
 
     public void BinarySerializationDemo()
@@ -51,7 +50,7 @@ public class Program
         var stream = File.Open("cars-serialized.dat", FileMode.Create);
         binaryFormatter.Serialize(stream, cars);
         stream.Close();
-        Console.WriteLine("Object Serialized in " + (DateTime.Now.Millisecond - then.Millisecond) + "ms.");
+        Console.WriteLine("Binary Method: Object Serialized in " + (DateTime.Now.Millisecond - then.Millisecond) + "ms.");
 
         cars = null;
 
@@ -60,10 +59,10 @@ public class Program
         binaryFormatter = new BinaryFormatter();
         cars = (List<Car>) binaryFormatter.Deserialize(stream);
         stream.Close(); 
-        Console.WriteLine("Object Deserialized in " + (DateTime.Now.Millisecond - then.Millisecond) + "ms.\n");
+        Console.WriteLine("Object Deserialized in " + (DateTime.Now.Millisecond - then.Millisecond) + "ms.");
 
         foreach (var car in cars)
-            Console.WriteLine(car.ToString());
+            Console.WriteLine(car.ToString()); Console.WriteLine();
     }
 
     public void JSONSerializationDemo()
@@ -77,22 +76,24 @@ public class Program
         var then = DateTime.Now;
         var filename = "cars-serialized.json";
         File.WriteAllText(filename, JsonSerializer.Serialize(cars));
-        Console.WriteLine("Object Serialized in " + (DateTime.Now.Millisecond - then.Millisecond) + "ms.");
+        Console.WriteLine("JSON Method: Object Serialized in " + (DateTime.Now.Millisecond - then.Millisecond) + "ms.");
 
         cars = null;
 
         then = DateTime.Now;
         cars = JsonSerializer.Deserialize<List<Car>>(File.ReadAllText(filename));
-        Console.WriteLine("Object Deserialized in " + (DateTime.Now.Millisecond - then.Millisecond) + "ms.\n");
+        Console.WriteLine("Object Deserialized in " + (DateTime.Now.Millisecond - then.Millisecond) + "ms.");
 
         foreach (var car in cars)
-            Console.WriteLine(car.ToString());
+            Console.WriteLine(car.ToString()); Console.WriteLine();
     }
 
 
     public static void Main(string[] args)
     {
         var program = new Program();
+        program.XmlSerializationDemo();
         program.JSONSerializationDemo();
+        program.BinarySerializationDemo();
     }
 }
