@@ -18,7 +18,7 @@ public class Program
 
         var then = DateTime.Now;
         var dataContractSerializer = new DataContractSerializer(typeof(List<Car>));
-        using (var stream = new FileStream("humans-serialized.dat", FileMode.Create))
+        using (var stream = new FileStream("cars-serialized.xml", FileMode.Create))
         {
             dataContractSerializer.WriteObject(stream, cars);
             Console.WriteLine("XML Method: Object Serialized in " + (DateTime.Now.Millisecond - then.Millisecond) + "ms.");
@@ -27,7 +27,7 @@ public class Program
         cars = null;
 
         then = DateTime.Now;
-        using (var stream = new FileStream("humans-serialized.dat", FileMode.Open))
+        using (var stream = new FileStream("cars-serialized.xml", FileMode.Open))
         {
             cars = (List<Car>) dataContractSerializer.ReadObject(stream);
             Console.WriteLine("Object Deserialized in " + (DateTime.Now.Millisecond - then.Millisecond) + "ms.");
@@ -47,7 +47,7 @@ public class Program
 
         var then = DateTime.Now;
         var binaryFormatter = new BinaryFormatter();
-        var stream = File.Open("cars-serialized.dat", FileMode.Create);
+        var stream = File.Open("cars-serialized.bin", FileMode.Create);
         binaryFormatter.Serialize(stream, cars);
         stream.Close();
         Console.WriteLine("Binary Method: Object Serialized in " + (DateTime.Now.Millisecond - then.Millisecond) + "ms.");
@@ -55,7 +55,7 @@ public class Program
         cars = null;
 
         then = DateTime.Now;
-        stream = File.Open("cars-serialized.dat", FileMode.Open);
+        stream = File.Open("cars-serialized.bin", FileMode.Open);
         binaryFormatter = new BinaryFormatter();
         cars = (List<Car>) binaryFormatter.Deserialize(stream);
         stream.Close(); 
